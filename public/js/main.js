@@ -5,34 +5,36 @@ const userList = document.getElementById('users');
 
 // Get username and room from URL
 const { username, room } = Qs.parse(location.search, {
+//   to remove unnecessary symbols from data
   ignoreQueryPrefix: true,
 });
 
+// socket config
 const socket = io();
 
-// Join chatroom
+// Join chatroom 
 socket.emit('joinRoom', { username, room });
 
-// Get room and users
+// Get room and users info
 socket.on('roomUsers', ({ room, users }) => {
   outputRoomName(room);
   outputUsers(users);
 });
 
-// Message from server
+// Message from server(BOT)
 socket.on('message', (message) => {
   console.log(message);
   outputMessage(message);
 
-  // Scroll down
+  // automatic Scroll down
   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
-// Message submit
+// Message submit to the server
 chatForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  // Get message text
+  // Get message text content
   let msg = e.target.elements.msg.value;
 
   msg = msg.trim();
@@ -49,7 +51,7 @@ chatForm.addEventListener('submit', (e) => {
   e.target.elements.msg.focus();
 });
 
-// Output message to DOM
+// append messages to the parent chat-messages div
 function outputMessage(message) {
   const div = document.createElement('div');
   div.classList.add('message');
